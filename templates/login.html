@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>بيئتي | تسجيل الدخول</title>
+</head>
+<body>
+    <div class="container" style="max-width: 400px; margin-top: 5rem;">
+        <section class="card-section" style="text-align: center;">
+            <div class="logo" style="margin-bottom: 1rem;">🌱 بيئتي (Bi'aty)</div>
+            <h2 style="margin-bottom: 1.5rem;">تسجيل الدخول</h2>
+
+            <form action="/home" method="GET">
+                <div class="form-group" style="text-align: right;">
+                    <label for="loginInput">البريد الإلكتروني أو رقم الهاتف:</label>
+                    <input type="text" id="loginInput" placeholder="example@email.com أو 216XXXXXXXX+" required>
+                </div>
+
+                <div class="form-group" style="text-align: right;">
+                    <label for="password">كلمة السر:</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="submit-btn" style="margin-top: 1rem;">دخول</button>
+            </form>
+
+            <p style="margin-top: 1.25rem; font-size: 0.9rem; color: #6b7280;">
+                <a href="/home" style="color: #2e7d32;">تصفح كزائر</a>
+            </p>
+        </section>
+    </div>
+</body>
+</html>

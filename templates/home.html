@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>بيئتي | الرئيسية</title>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">🌱 بيئتي (Bi'aty)</div>
+        <p class="subtitle">منصة التدوير والابتكار البيئي</p>
+    </header>
+
+    <main class="container">
+
+        <section class="hero" style="border-radius: 10px; margin-bottom: 2rem;">
+            <h1>أهلاً بك في مجتمع بيئتي</h1>
+            <p>تصفح أحدث أفكار إعادة التدوير ونقاط الجمع في مدينتك</p>
+            <a href="/index" class="submit-btn" style="display: inline-block; width: auto; margin-top: 1rem; text-decoration: none;">+ إضافة مشاركة جديدة</a>
+        </section>
+
+        <section class="feed-section">
+            <h2 style="margin-bottom: 1rem;">منشورات المجتمع</h2>
+
+            <div id="itemsContainer" class="grid-container">
+                <div class="item-card" data-category="مشروع تطبيقي">
+                    <span class="tag">مشروع تطبيقي</span>
+                    <h3>تحويل القوارير البلاستيكية إلى أصيص نبتات</h3>
+                    <p><strong>المادة:</strong> بلاستيك</p>
+                    <p style="margin-top: 0.5rem; color: #555;">فكره بسيطة لإعادة استخدام القوارير الفارغة وزراعة النباتات المنزليّة بها.</p>
+                </div>
+
+                <div class="item-card" data-category="نقطة تجميع">
+                    <span class="tag">نقطة تجميع</span>
+                    <h3>حاوية جمع المجمعات البلاستيكية - وسط المدينة</h3>
+                    <p><strong>المادة:</strong> بلاستيك / ألمنيوم</p>
+                    <p style="margin-top: 0.5rem; color: #555;">موقع مخصص لفرز وإعادة تجميع القوارير والعلب المعدنية.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>مشروع مادة العربية والإعلامية &copy; 2026 - بيئتي</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
