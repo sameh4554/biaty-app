@@ -4,48 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <title>بيئتي | الرئيسية</title>
 </head>
 <body>
     <header class="navbar">
-        <div class="logo">🌱 بيئتي (Bi'aty)</div>
-        <p class="subtitle">منصة التدوير والابتكار البيئي</p>
+        <a class="logo" href="/home">🌱 بيئتي</a>
+        <nav class="main-nav" aria-label="التنقل الرئيسي">
+            <a class="active" href="/home">الرئيسية</a>
+            <a href="#community">المجتمع</a>
+            <a href="#waste-map">خريطة النفايات</a>
+            <a href="#eco-assistant">المساعد البيئي</a>
+            <a class="nav-action" href="/index">+ أضف منشوراً</a>
+            {% if current_user %}
+            <a href="/messages">الرسائل</a>
+            <a href="/users/{{ current_user.id }}">{{ current_user.display_name }}</a>
+            <form class="logout-form" action="/logout" method="POST"><button type="submit">خروج</button></form>
+            {% else %}
+            <a href="/">دخول</a>
+            {% endif %}
+        </nav>
     </header>
 
     <main class="container">
 
-        <section class="hero" style="border-radius: 10px; margin-bottom: 2rem;">
-            <h1>أهلاً بك في مجتمع بيئتي</h1>
-            <p>تصفح أحدث أفكار إعادة التدوير ونقاط الجمع في مدينتك</p>
-            <a href="/index" class="submit-btn" style="display: inline-block; width: auto; margin-top: 1rem; text-decoration: none;">+ إضافة مشاركة جديدة</a>
+        <section class="hero">
+            <p class="eyebrow">مجتمع بيئي تونسي</p>
+            <h1>أفكار صغيرة، أثر أخضر أكبر.</h1>
+            <p>اكتشف مبادرات المجتمع، شارك تجربتك، وتابع بلاغات النفايات في تونس.</p>
+            <a href="/index" class="submit-btn hero-action">+ شارك مبادرتك</a>
         </section>
 
-        <section class="feed-section">
-            <h2 style="margin-bottom: 1rem;">منشورات المجتمع</h2>
-
-            <div id="itemsContainer" class="grid-container">
-                <div class="item-card" data-category="مشروع تطبيقي">
-                    <span class="tag">مشروع تطبيقي</span>
-                    <h3>تحويل القوارير البلاستيكية إلى أصيص نبتات</h3>
-                    <p><strong>المادة:</strong> بلاستيك</p>
-                    <p style="margin-top: 0.5rem; color: #555;">فكره بسيطة لإعادة استخدام القوارير الفارغة وزراعة النباتات المنزليّة بها.</p>
+        <div class="home-layout">
+            <section class="feed-section" id="community">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">من المجتمع</p>
+                        <h2>أحدث المنشورات</h2>
+                    </div>
+                    <a href="/index" class="text-link">كل المنشورات ←</a>
                 </div>
-
-                <div class="item-card" data-category="نقطة تجميع">
-                    <span class="tag">نقطة تجميع</span>
-                    <h3>حاوية جمع المجمعات البلاستيكية - وسط المدينة</h3>
-                    <p><strong>المادة:</strong> بلاستيك / ألمنيوم</p>
-                    <p style="margin-top: 0.5rem; color: #555;">موقع مخصص لفرز وإعادة تجميع القوارير والعلب المعدنية.</p>
+                <div id="itemsContainer" class="grid-container">
+                    <p class="loading-text">جارٍ تحميل منشورات المجتمع...</p>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            <aside class="tools-column">
+                <section class="tool-section map-section" id="waste-map">
+                    <div class="section-heading">
+                        <div><p class="eyebrow">تونس</p><h2>خريطة بلاغات النفايات</h2></div>
+                        <span class="live-count">● 8 بلاغات تجريبية</span>
+                    </div>
+                    <div id="tunisiaMap" role="application" aria-label="خريطة تفاعلية لبلاغات النفايات في تونس"></div>
+                    <div class="map-controls">
+                        <button type="button" class="map-control-btn" id="locateNearest">⌖ استخدم موقعي</button>
+                        <button type="button" class="map-control-btn secondary-control" id="pickMapLocation">حدد موقعي على الخريطة</button>
+                    </div>
+                    <p class="map-directions" id="mapDirections" role="status" aria-live="polite">اعثر على أقرب بلاغ تجريبي، ثم افتح المسار على الخريطة.</p>
+                    <p class="map-note">النقاط المعروضة تجريبية وغير موثقة ميدانياً، ولا تمثل جرداً كاملاً للمكبات. أضف بيانات البلاغات للتحقق منها.</p>
+                </section>
+
+                <section class="tool-section assistant-section" id="eco-assistant">
+                    <div class="assistant-heading">
+                        <img class="assistant-icon" src="{{ url_for('static', filename='Tozeur, Tunisia, Day 269 - Roderick Phillips.jpeg') }}" alt="لبيب، المساعد البيئي">
+                        <div><p class="eyebrow">مساعد بيئي </p><h2>لبيب</h2></div>
+                        <span class="online-dot" title="متاح"></span>
+                    </div>
+                    <div class="chat-messages" id="chatMessages" aria-live="polite">
+                        <div class="chat-message assistant-message">أهلاً، أنا لبيب. أستطيع اقتراح طرق لإعادة الاستخدام أو مساعدتك في فرز النفايات. ماذا لديك؟</div>
+                    </div>
+                    <form class="chat-form" id="assistantForm">
+                        <label class="visually-hidden" for="assistantInput">اكتب سؤالك للمساعد البيئي</label>
+                        <input id="assistantInput" type="text" placeholder="مثال: كيف أعيد استخدام علبة؟" autocomplete="off" required>
+                        <button type="submit" aria-label="إرسال السؤال">↑</button>
+                    </form>
+                    <p class="assistant-note">قدّم تفاصيل المواد أو النفايات لتحصل على اقتراحات أدق.</p>
+                </section>
+            </aside>
+        </div>
 
     </main>
 
     <footer>
-        <p>مشروع مادة العربية والإعلامية &copy; 2026 - بيئتي</p>
+        <p>مشروع مادة العربية &copy; 2026 - بيئتي</p>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

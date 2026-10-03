@@ -8,8 +8,21 @@
 </head>
 <body>
     <header class="navbar">
-        <div class="logo">🌱 بيئتي (Bi'aty)</div>
-        <p class="subtitle">نحو بيئة أنظف وحياة أكثر استدامة</p>
+        <a class="logo" href="/home">🌱 بيئتي</a>
+        <nav class="main-nav" aria-label="التنقل الرئيسي">
+            <a href="/home">الرئيسية</a>
+            <a href="/home#community">المجتمع</a>
+            <a href="/home#waste-map">خريطة النفايات</a>
+            <a href="/home#eco-assistant">المساعد البيئي</a>
+            <a class="nav-action active" href="/index">+ أضف منشوراً</a>
+            {% if current_user %}
+            <a href="/messages">الرسائل</a>
+            <a href="/users/{{ current_user.id }}">{{ current_user.display_name }}</a>
+            <form class="logout-form" action="/logout" method="POST"><button type="submit">خروج</button></form>
+            {% else %}
+            <a href="/">دخول</a>
+            {% endif %}
+        </nav>
     </header>
 
     <section class="hero">
@@ -19,9 +32,14 @@
 
     <main class="container">
 
+        {% if current_user %}
         <section class="card-section">
             <h2>إضافة فكرة أو نقطة تجميع جديدة</h2>
             <form id="recyclingForm">
+                <div class="form-group">
+                    <label for="author">اسم صاحب المنشور:</label>
+                    <input type="text" id="author" value="{{ current_user.display_name }}" readonly>
+                </div>
                 <div class="form-group">
                     <label for="title">عنوان الفكرة / الموقع:</label>
                     <input type="text" id="title" placeholder="مثال: تحويل القوارير إلى أصيص زراعي" required>
@@ -49,6 +67,13 @@
                 <button type="submit" class="submit-btn">نشر في المنصة</button>
             </form>
         </section>
+        {% else %}
+        <section class="card-section sign-in-notice">
+            <h2>سجّل الدخول للمشاركة</h2>
+            <p>أنشئ حساباً لربط منشوراتك بملفك والتواصل مع المجتمع.</p>
+            <a class="submit-btn" href="/">تسجيل الدخول أو إنشاء حساب</a>
+        </section>
+        {% endif %}
 
         <section class="feed-section">
             <h2>أحدث المشاريع ونقاط التدوير</h2>

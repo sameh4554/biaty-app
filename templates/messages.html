@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>{% if recipient %}محادثة مع {{ recipient.display_name }}{% else %}الرسائل{% endif %} | بيئتي</title>
+</head>
+<body>
+    <header class="navbar">
+        <a class="logo" href="/home">🌱 بيئتي</a>
+        <nav class="main-nav" aria-label="التنقل الرئيسي">
+            <a href="/home">الرئيسية</a>
+            <a href="/home#community">المجتمع</a>
+            <a class="active" href="/messages">الرسائل</a>
+            <a href="/users/{{ current_user.id }}">{{ current_user.display_name }}</a>
+            <form class="logout-form" action="/logout" method="POST"><button type="submit">خروج</button></form>
+        </nav>
+    </header>
+
+    <main class="container messages-page">
+        <div class="section-heading">
+            <div><p class="eyebrow">تواصل مباشر</p><h1>رسائلي</h1></div>
+        </div>
+        <div class="messages-layout">
+            <aside class="conversation-sidebar" aria-label="قائمة المحادثات">
+                <h2>المحادثات</h2>
+                <div class="conversation-list" id="conversationList">
+                    {% for conversation in conversations %}
+                    <a class="conversation-link{% if recipient and recipient.id == conversation.id %} active{% endif %}" data-user-id="{{ conversation.id }}" href="/messages/{{ conversation.id }}">
+                        <span class="conversation-avatar">{{ conversation.display_name[0] }}</span>
+                        <span class="conversation-copy">
+                            <strong>{{ conversation.display_name }}</strong>
+                            <small>{{ conversation.last_message }}</small>
+                        </span>
+                        {% if conversation.unread_count %}<span class="unread-count">{{ conversation.unread_count }}</span>{% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                <p class="empty-state" id="noConversations" {% if conversations %}hidden{% endif %}>لا توجد محادثات بعد. ابدأ محادثة من الملف الشخصي لأحد الأعضاء.</p>
+            </aside>
+
+            {% if recipient %}
+            <section class="message-thread" id="messageThread" data-recipient-id="{{ recipient.id }}" data-current-user-id="{{ current_user.id }}">
+                <header class="thread-header">
+                    <div>
+                        <p class="eyebrow">محادثة خاصة</p>
+                        <h2><a href="/users/{{ recipient.id }}">{{ recipient.display_name }}</a></h2>
+                    </div>
+                    <a class="text-link" href="/users/{{ recipient.id }}">عرض الملف الشخصي ←</a>
+                </header>
+                <div class="message-list" id="messageList" role="log" aria-live="polite">
+                    <p class="loading-text">جارٍ تحميل الرسائل...</p>
+                </div>
+                <p class="message-status" id="messageStatus" role="status" aria-live="polite"></p>
+                <form class="message-form" id="directMessageForm">
+                    <label class="visually-hidden" for="messageBody">اكتب رسالة خاصة</label>
+                    <textarea id="messageBody" name="body" rows="2" maxlength="2000" placeholder="اكتب رسالة خاصة..." required></textarea>
+                    <button type="submit" aria-label="إرسال الرسالة">إرسال</button>
+                </form>
+                <p class="privacy-note">هذه المحادثة خاصة بينك وبين {{ recipient.display_name }}.</p>
+            </section>
+            {% else %}
+            <section class="message-thread empty-thread">
+                <span class="assistant-icon" aria-hidden="true">✉</span>
+                <h2>اختر محادثة</h2>
+                <p>افتح ملف أحد الأعضاء واضغط على «مراسلة» لبدء محادثة خاصة.</p>
+                <a class="text-link" href="/home#community">استكشاف منشورات المجتمع ←</a>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

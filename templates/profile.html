@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>{% if profile %}{{ profile.display_name }} | بيئتي{% else %}الملف الشخصي | بيئتي{% endif %}</title>
+</head>
+<body>
+    <header class="navbar">
+        <a class="logo" href="/home">🌱 بيئتي</a>
+        <nav class="main-nav" aria-label="التنقل الرئيسي">
+            <a href="/home">الرئيسية</a>
+            <a href="/home#community">المجتمع</a>
+            {% if current_user %}
+            <a href="/messages">الرسائل</a>
+            <a href="/users/{{ current_user.id }}">{{ current_user.display_name }}</a>
+            <form class="logout-form" action="/logout" method="POST"><button type="submit">خروج</button></form>
+            {% else %}<a href="/">دخول</a>{% endif %}
+        </nav>
+    </header>
+
+    <main class="container profile-page">
+        {% if profile %}
+        <section class="profile-header">
+            <span class="profile-avatar" aria-hidden="true">{{ profile.display_name[0] }}</span>
+            <div class="profile-identity">
+                <p class="eyebrow">ملف عضو في بيئتي</p>
+                <h1>{{ profile.display_name }}</h1>
+                <p>{{ posts|length }} منشور في المجتمع</p>
+            </div>
+            {% if current_user and current_user.id != profile.id and profile.can_message %}
+            <a class="submit-btn profile-message-link" href="/messages/{{ profile.id }}">✉ مراسلة</a>
+            {% elif not current_user and profile.can_message %}
+            <a class="submit-btn profile-message-link" href="/">سجّل الدخول للمراسلة</a>
+            {% endif %}
+        </section>
+
+        <section class="profile-posts">
+            <div class="section-heading">
+                <div><p class="eyebrow">منشوراته</p><h2>مساهمات المجتمع</h2></div>
+            </div>
+            {% if posts %}
+            <div class="grid-container">
+                {% for post in posts %}
+                <article class="item-card">
+                    <span class="tag">{{ post.category }}</span>
+                    <h3>{{ post.title }}</h3>
+                    <p><strong>المادة:</strong> {{ post.material }}</p>
+                    <p class="post-description">{{ post.description }}</p>
+                    <p class="profile-post-count">{{ post.comments_count }} تعليق</p>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-state">لم يضف هذا العضو منشورات بعد.</p>
+            {% endif %}
+        </section>
+        {% else %}
+        <section class="empty-state profile-not-found">
+            <h1>الملف غير موجود</h1>
+            <a href="/home">العودة إلى المجتمع</a>
+        </section>
+        {% endif %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

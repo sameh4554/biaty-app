@@ -6,30 +6,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>بيئتي | تسجيل الدخول</title>
 </head>
-<body>
-    <div class="container" style="max-width: 400px; margin-top: 5rem;">
-        <section class="card-section" style="text-align: center;">
-            <div class="logo" style="margin-bottom: 1rem;">🌱 بيئتي (Bi'aty)</div>
-            <h2 style="margin-bottom: 1.5rem;">تسجيل الدخول</h2>
+<body class="auth-page">
+    <main class="container auth-container">
+        <section class="card-section auth-panel">
+            <a class="auth-logo" href="/home">🌱 بيئتي</a>
+            <p class="eyebrow">مجتمع بيئي تونسي</p>
+            <h1>مرحباً بعودتك</h1>
+            <p class="auth-intro">سجّل الدخول لمشاركة أفكارك ومراسلة أعضاء المجتمع.</p>
 
-            <form action="/home" method="GET">
-                <div class="form-group" style="text-align: right;">
-                    <label for="loginInput">البريد الإلكتروني أو رقم الهاتف:</label>
-                    <input type="text" id="loginInput" placeholder="example@email.com أو 216XXXXXXXX+" required>
+            {% if login_error %}<p class="form-error" role="alert">{{ login_error }}</p>{% endif %}
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="loginEmail">البريد الإلكتروني:</label>
+                    <input type="email" id="loginEmail" name="email" autocomplete="email" required>
                 </div>
 
-                <div class="form-group" style="text-align: right;">
-                    <label for="password">كلمة السر:</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                <div class="form-group">
+                    <label for="loginPassword">كلمة السر:</label>
+                    <input type="password" id="loginPassword" name="password" autocomplete="current-password" required>
                 </div>
 
-                <button type="submit" class="submit-btn" style="margin-top: 1rem;">دخول</button>
+                <button type="submit" class="submit-btn">دخول</button>
             </form>
 
-            <p style="margin-top: 1.25rem; font-size: 0.9rem; color: #6b7280;">
-                <a href="/home" style="color: #2e7d32;">تصفح كزائر</a>
-            </p>
+            <details class="registration-block" {% if register_error %}open{% endif %}>
+                <summary>إنشاء حساب جديد</summary>
+                {% if register_error %}<p class="form-error" role="alert">{{ register_error }}</p>{% endif %}
+                <form action="/register" method="POST">
+                    <div class="form-group">
+                        <label for="registerName">الاسم الظاهر:</label>
+                        <input type="text" id="registerName" name="display_name" value="{{ register_name or '' }}" maxlength="80" autocomplete="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">البريد الإلكتروني:</label>
+                        <input type="email" id="registerEmail" name="email" value="{{ register_email or '' }}" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">كلمة السر (8 أحرف على الأقل):</label>
+                        <input type="password" id="registerPassword" name="password" minlength="8" autocomplete="new-password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">إنشاء الحساب</button>
+                </form>
+            </details>
+
+            <a class="guest-link" href="/home">تصفح كزائر</a>
         </section>
-    </div>
+    </main>
 </body>
 </html>
